@@ -5,7 +5,7 @@ module.exports = {
     bracketSpacing: true,
     // 行结束符使用 Unix 格式
     // true: Put > on the last line instead of at a new line
-    // jsxBracketSameLine: false,
+    jsxBracketSameLine: false,
     // 行宽
     printWidth: 100,
     // 换行方式
