@@ -2,7 +2,7 @@ module.exports = {
     // 箭头函数只有一个参数的时候可以忽略括号
     arrowParens: 'avoid',
     // 括号内部不要出现空格
-    bracketSpacing: true,
+    // bracketSpacing: true,
     // 行结束符使用 Unix 格式
     // true: Put > on the last line instead of at a new line
     jsxBracketSameLine: false,
@@ -20,6 +20,7 @@ module.exports = {
     useTabs: false,
     // 后置逗号，多行对象、数组在最后一行增加逗号
     trailingComma: 'es5',
-    parser: 'typescript'
+    parser: 'typescript',
+    "endOfLine": "auto"
   }
   
