@@ -46,3 +46,8 @@ const router = createBrowserRouter([
 ])
 
 export default router
+//常用的路由常量
+export const HOME_PATHNAME = '/'
+export const LOGIN_PATHNAME = '/login'
+export const REGISTER_PATHNAME = '/register' //万一路由变了麻烦啊
+export const MANAGE_LIST_PATHNAME = '/manage/list'
