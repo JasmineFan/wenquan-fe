@@ -1,8 +1,10 @@
 import React, { FC, useState } from 'react'
 import styles from './Common.module.scss'
-import { Typography, Empty, Table, Tag } from 'antd'
+import { Typography, Empty, Table, Tag, Button, Space, Modal } from 'antd'
+import { ExclamationOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
+const { confirm } = Modal
 
 const rawQuestionList = [
   {
@@ -33,6 +35,8 @@ const rawQuestionList = [
 
 const Trash: FC = () => {
   const [questionList, setQuestionList] = useState(rawQuestionList)
+  //记录哪些被选中，可以用来删除啥的
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
   const tableColumns = [
     {
       title: '标题',
@@ -55,6 +59,42 @@ const Trash: FC = () => {
       dataIndex: 'createdAt',
     },
   ]
+  function del() {
+    confirm({
+      title: '确定彻底删除？',
+      icon: <ExclamationOutlined />,
+      content: '删除以后不可以找回',
+      onOk: () => {
+        alert(`删除${JSON.stringify(selectedIds)}`)
+      },
+    })
+  }
+  const TableElem = (
+    <>
+      <div style={{ marginBottom: '16px' }}>
+        <Space>
+          <Button type="primary" disabled={selectedIds.length === 0}>
+            恢复
+          </Button>
+          <Button danger disabled={selectedIds.length === 0} onClick={del}>
+            彻底删除
+          </Button>
+        </Space>
+      </div>
+      <Table
+        dataSource={questionList}
+        columns={tableColumns}
+        pagination={false}
+        rowKey={q => q._id}
+        rowSelection={{
+          type: 'checkbox',
+          onChange: selectedRowKeys => {
+            setSelectedIds(selectedRowKeys as string[])
+          },
+        }}
+      />
+    </>
+  )
   return (
     <>
       <div className={styles.header}>
@@ -65,9 +105,7 @@ const Trash: FC = () => {
       </div>
       <div className={styles.content}>
         {questionList.length === 0 && <Empty description="没有删除的问卷" />}
-        {questionList.length > 0 && (
-          <Table dataSource={questionList} columns={tableColumns} pagination={false} />
-        )}
+        {questionList.length > 0 && TableElem}
       </div>
       <div className={styles.footer}>loadingmore</div>
     </>
