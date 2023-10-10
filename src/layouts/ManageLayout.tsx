@@ -44,8 +44,6 @@ const ManageLayout: FC = () => {
         </Space>
       </div>
       <div className={styles.right}>
-        {' '}
-        right
         <Outlet />
       </div>
     </div>
