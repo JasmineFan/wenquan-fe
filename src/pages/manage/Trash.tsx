@@ -1,40 +1,50 @@
 import React, { FC, useState } from 'react'
 import styles from './Common.module.scss'
-import { Typography, Empty, Table, Tag, Button, Space, Modal } from 'antd'
+import { Typography, Empty, Table, Tag, Button, Space, Modal, Spin } from 'antd'
 import { ExclamationOutlined } from '@ant-design/icons'
+import ListSearch from '../../components/ListSearch'
+import { useSearchParams } from 'react-router-dom'
+import useLoadQuestionListData from '../../hooks/useLoadQuestionListData'
+import { useTitle } from 'ahooks'
 
 const { Title } = Typography
 const { confirm } = Modal
 
-const rawQuestionList = [
-  {
-    _id: '1',
-    title: '问卷1',
-    answerCount: 3,
-    createdAt: '3月10 日 11:00',
-    isStar: true,
-    isPublished: true,
-  },
-  {
-    _id: '2',
-    title: '问卷2',
-    answerCount: 6,
-    createdAt: '3月10 日 11:00',
-    isStar: false,
-    isPublished: false,
-  },
-  {
-    _id: '3',
-    title: '问卷3',
-    answerCount: 0,
-    createdAt: '3月10 日 11:00',
-    isStar: true,
-    isPublished: false,
-  },
-]
+// const rawQuestionList = [
+//   {
+//     _id: '1',
+//     title: '问卷1',
+//     answerCount: 3,
+//     createdAt: '3月10 日 11:00',
+//     isStar: true,
+//     isPublished: true,
+//   },
+//   {
+//     _id: '2',
+//     title: '问卷2',
+//     answerCount: 6,
+//     createdAt: '3月10 日 11:00',
+//     isStar: false,
+//     isPublished: false,
+//   },
+//   {
+//     _id: '3',
+//     title: '问卷3',
+//     answerCount: 0,
+//     createdAt: '3月10 日 11:00',
+//     isStar: true,
+//     isPublished: false,
+//   },
+// ]
 
 const Trash: FC = () => {
-  const [questionList, setQuestionList] = useState(rawQuestionList)
+  useTitle('回收站')
+  // const [questionList, setQuestionList] = useState(rawQuestionList)
+  const [searchParam] = useSearchParams()
+  console.log('keyword', searchParam.get('keyword'))
+  const { loading, data = {} } = useLoadQuestionListData({ isDeleted: true })
+  const { list = {}, total = 0 } = data
+
   //记录哪些被选中，可以用来删除啥的
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const tableColumns = [
@@ -82,7 +92,7 @@ const Trash: FC = () => {
         </Space>
       </div>
       <Table
-        dataSource={questionList}
+        dataSource={list}
         columns={tableColumns}
         pagination={false}
         rowKey={q => q._id}
@@ -101,11 +111,18 @@ const Trash: FC = () => {
         <div className={styles.left}>
           <Title level={3}>回收站</Title>
         </div>
-        <div className={styles.right}>搜索</div>
+        <div className={styles.right}>
+          <ListSearch />
+        </div>
       </div>
       <div className={styles.content}>
-        {questionList.length === 0 && <Empty description="没有删除的问卷" />}
-        {questionList.length > 0 && TableElem}
+        {loading && (
+          <div style={{ textAlign: 'center' }}>
+            <Spin />
+          </div>
+        )}
+        {!loading && list.length === 0 && <Empty description="没有删除的问卷" />}
+        {list.length > 0 && TableElem}
       </div>
       <div className={styles.footer}>loadingmore</div>
     </>
